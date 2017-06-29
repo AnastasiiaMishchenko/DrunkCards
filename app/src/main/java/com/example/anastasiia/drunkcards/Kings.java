@@ -1,32 +1,65 @@
 package com.example.anastasiia.drunkcards;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class Kings extends AppCompatActivity implements View.OnClickListener{
 
     ArrayList<String> array = new ArrayList<String>();
+    String[] names = new String[array.size()];
     public static final String Tag = "Kings";
-    String [] cards = {"clubs_ace", "clubs_king", "clubs_queen", "clubs_jack", "clubs_ten", "clubs_nine", "clubs_eight", "clubs_seven", "clubs_six", "clubs_five", "clubs_four", "clubs_three", "clubs_two",
-            "diamonds_ace", "diamonds_king", "diamonds_queen", "diamonds_jack", "diamonds_ten", "diamonds_nine", "diamonds_eight", "diamonds_seven", "diamonds_six", "diamonds_five", "diamonds_four", "diamonds_three", "diamonds_two",
-            "hearts_ace", "hearts_king", "hearts_queen", "hearts_jack", "hearts_ten", "hearts_nine", "hearts_eight", "hearts_seven", "hearts_six", "hearts_five", "hearts_four", "hearts_three", "hearts_two",
-            "spades_ace", "spades_king", "spades_queen", "spades_jack", "spades_ten", "spades_nine", "spades_eight", "spades_seven", "spades_six", "spades_five", "spades_four", "spades_three", "spades_two"};
-//    Map<String, String> cards = new HashMap<String, String>();
+    int [] cards = {R.drawable.clubs_ace, R.drawable.clubs_king, R.drawable.clubs_queen, R.drawable.clubs_jack , R.drawable.clubs_ten, R.drawable.clubs_nine, R.drawable.clubs_eight, R.drawable.clubs_seven, R.drawable.clubs_six, R.drawable.clubs_five, R.drawable.clubs_four, R.drawable.clubs_three, R.drawable.clubs_two,
+            R.drawable.diamonds_ace, R.drawable.diamonds_king, R.drawable.diamonds_queen, R.drawable.diamonds_jack, R.drawable.diamonds_ten, R.drawable.diamonds_nine, R.drawable.diamonds_eight, R.drawable.diamonds_seven, R.drawable.diamonds_six, R.drawable.diamonds_five, R.drawable.diamonds_four, R.drawable.diamonds_three, R.drawable.diamonds_two,
+            R.drawable.hearts_ace, R.drawable.hearts_king, R.drawable.hearts_queen, R.drawable.hearts_jack, R.drawable.hearts_ten, R.drawable.hearts_nine, R.drawable.hearts_eight, R.drawable.hearts_seven, R.drawable.hearts_six, R.drawable.hearts_five, R.drawable.hearts_four, R.drawable.hearts_three, R.drawable.hearts_two,
+            R.drawable.spades_ace, R.drawable.spades_king, R.drawable.spades_queen, R.drawable.spades_jack, R.drawable.spades_ten, R.drawable.spades_nine, R.drawable.spades_eight, R.drawable.spades_seven, R.drawable.spades_six, R.drawable.spades_five, R.drawable.spades_four, R.drawable.spades_three, R.drawable.spades_two};
+
+    List<Integer> numlist = new ArrayList<Integer>();
+    Random rand;
+    int turn = 0;
+    TextView tv;
+    ListView lv;
+    ArrayList<String> listItems = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
+    EditText txt;
+    String getRule = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kings);
+
+        tv = (TextView)findViewById(R.id.set_name);
+
+        for(int i = 0; i < cards.length; i ++){
+            numlist.add(cards[i]);
+        }
+
+
+        lv = (ListView) findViewById(R.id.rule_set);
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
+        lv.setAdapter(adapter);
 
         this.setTitle("Kings");
         Button b = null;
@@ -37,8 +70,6 @@ public class Kings extends AppCompatActivity implements View.OnClickListener{
         b = (Button) findViewById(R.id.get_card_button);
         b.setOnClickListener(this);
 
-//        setCards();
-
     }
 
     @Override
@@ -48,9 +79,9 @@ public class Kings extends AppCompatActivity implements View.OnClickListener{
         Bundle bu = i.getExtras();
         array = bu.getStringArrayList("Array");
         Log.e("Names in Kings: ", array.toString());
+        names = array.toArray(names);
 
     }
-
 
     @Override
     public void onClick(View view) {
@@ -63,70 +94,136 @@ public class Kings extends AppCompatActivity implements View.OnClickListener{
                 startActivity(i);
             } break;
             case R.id.get_card_button : {
-                int ind = new Random().nextInt(cards.length);
-                String random = (cards[ind]);
-                
-                Log.e(Tag, random);
+                int getTenClubs = R.drawable.clubs_ten;
+                int getTenDiamonds = R.drawable.diamonds_ten;
+                int getTenSpades = R.drawable.spades_ten;
+                int getTenHearts = R.drawable.hearts_ten;
+
+                int getEightClubs = R.drawable.clubs_eight;
+                int getEightDiamonds = R.drawable.diamonds_eight;
+                int getEightSpades = R.drawable.spades_eight;
+                int getEightHearts = R.drawable.hearts_eight;
+
+                int getKingClubs = R.drawable.clubs_king;
+                int getKingDiamonds = R.drawable.diamonds_king;
+                int getKingSpades = R.drawable.spades_king;
+                int getKingHearts = R.drawable.hearts_king;
+
+                int getNineClubs = R.drawable.clubs_nine;
+                int getNineDiamonds = R.drawable.diamonds_nine;
+                int getNineSpades = R.drawable.spades_nine;
+                int getNineHearts = R.drawable.hearts_nine;
+
+                rand = new Random();
+                Integer randEl = numlist.get(rand.nextInt(numlist.size()));
+                ImageView iv;
+                iv = (ImageView)findViewById(R.id.card_view);
+                iv.setImageResource(randEl);
+                if(randEl == getTenClubs || randEl == getTenDiamonds || randEl == getTenHearts || randEl == getTenSpades){
+                    txt  = new EditText(this);
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+                    alertDialog.setTitle("Categories");
+                    alertDialog.setMessage("Pick a category, and say something from that category");
+                    alertDialog.setView(txt);
+                    alertDialog.setPositiveButton("Add", new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getRule = txt.getText().toString();
+                            listItems.add(getRule);
+                        }
+                    });
+                    alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    AlertDialog ad = alertDialog.show();
+                    adapter.notifyDataSetChanged();
+                } else if (randEl == getEightClubs || randEl == getEightDiamonds || randEl == getEightHearts || randEl == getEightSpades){
+                    txt  = new EditText(this);
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+                    alertDialog.setTitle("Mate");
+                    alertDialog.setMessage("Pick a person to drink with");
+                    alertDialog.setView(txt);
+                    alertDialog.setPositiveButton("Add", new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getRule = txt.getText().toString();
+                            listItems.add(getRule);
+                        }
+                    });
+                    alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    AlertDialog ad = alertDialog.show();
+                    adapter.notifyDataSetChanged();
+                } else if (randEl == getNineClubs || randEl == getNineDiamonds || randEl == getNineHearts || randEl == getNineSpades){
+                    txt  = new EditText(this);
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+                    alertDialog.setTitle("Rhyme");
+                    alertDialog.setMessage("Say a phrase, and everyone else must say phrases that rhyme");
+                    alertDialog.setView(txt);
+                    alertDialog.setPositiveButton("Add", new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getRule = txt.getText().toString();
+                            listItems.add(getRule);
+                        }
+                    });
+                    alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    AlertDialog ad = alertDialog.show();
+                    adapter.notifyDataSetChanged();
+                } else if (randEl == getKingClubs || randEl == getKingDiamonds || randEl == getKingHearts || randEl == getKingSpades){
+                    txt  = new EditText(this);
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+                    alertDialog.setTitle("Ruler");
+                    alertDialog.setMessage("Make a rule that everyone must follow until the next King is drawn");
+                    alertDialog.setView(txt);
+                    alertDialog.setPositiveButton("Add", new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getRule = txt.getText().toString();
+                            listItems.add(getRule);
+                        }
+                    });
+                    alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    AlertDialog ad = alertDialog.show();
+                    adapter.notifyDataSetChanged();
+                }
+                numlist.remove(randEl);
+                int temp = numlist.size();
+                Log.e(Tag, "Size of new array is " + String.valueOf(temp));
+                if(temp == 0){
+                    Toast.makeText(getApplicationContext(), "Game is over", Toast.LENGTH_SHORT).show();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+                turn++;
+                Log.e(Tag, "Now it is " + String.valueOf(turn) + " turn");
+                String setName = names[turn%array.size()];
+                tv.setText("Now it is " + setName + "'s turn!");
             }
         }
     }
 
-
-//    public void setCards(){
-//        cards.put("clubs_ace", "Ace clubs");
-//        cards.put("clubs_king", "King clubs");
-//        cards.put("clubs_queen", "Queen clubs");
-//        cards.put("clubs_jack", "Jack clubs");
-//        cards.put("clubs_ten", "Ten clubs");
-//        cards.put("clubs_nine", "Nine clubs");
-//        cards.put("clubs_eight", "Eight clubs");
-//        cards.put("clubs_seven", "Seven clubs");
-//        cards.put("clubs_six", "Six clubs");
-//        cards.put("clubs_five", "Five clubs");
-//        cards.put("clubs_four", "Four clubs");
-//        cards.put("clubs_three", "Three clubs");
-//        cards.put("clubs_two", "Two clubs");
-//
-//        cards.put("diamonds_ace", "Ace diamonds");
-//        cards.put("diamonds_king", "King diamonds");
-//        cards.put("diamonds_queen", "Queen diamonds");
-//        cards.put("diamonds_jack", "Jack diamonds");
-//        cards.put("diamonds_ten", "Ten diamonds");
-//        cards.put("diamonds_nine", "Nine diamonds");
-//        cards.put("diamonds_eight", "Eight diamonds");
-//        cards.put("diamonds_seven", "Seven diamonds");
-//        cards.put("diamonds_six", "Six diamonds");
-//        cards.put("diamonds_five", "Five diamonds");
-//        cards.put("diamonds_four", "Four diamonds");
-//        cards.put("diamonds_three", "Three diamonds");
-//        cards.put("diamonds_two", "Two diamonds");
-//
-//        cards.put("hearts_ace", "Ace hearts");
-//        cards.put("hearts_king", "King hearts");
-//        cards.put("hearts_queen", "Queen hearts");
-//        cards.put("hearts_jack", "Jack hearts");
-//        cards.put("hearts_ten", "Ten hearts");
-//        cards.put("hearts_nine", "Nine hearts");
-//        cards.put("hearts_eight", "Eight hearts");
-//        cards.put("hearts_seven", "Seven hearts");
-//        cards.put("hearts_six", "Six hearts");
-//        cards.put("hearts_five", "Five hearts");
-//        cards.put("hearts_four", "Four hearts");
-//        cards.put("hearts_three", "Three hearts");
-//        cards.put("hearts_two", "Two hearts");
-//
-//        cards.put("spades_ace", "Ace spades");
-//        cards.put("spades_king", "King spades");
-//        cards.put("spades_queen", "Queen spades");
-//        cards.put("spades_jack", "Jack spades");
-//        cards.put("spades_ten", "Ten spades");
-//        cards.put("spades_nine", "Nine spades");
-//        cards.put("spades_eight", "Eight spades");
-//        cards.put("spades_seven", "Seven spades");
-//        cards.put("spades_six", "Six spades");
-//        cards.put("spades_five", "Five spades");
-//        cards.put("spades_four", "Four spades");
-//        cards.put("spades_three", "Three spades");
-//        cards.put("spades_two", "Two spades");
-//    }
 }

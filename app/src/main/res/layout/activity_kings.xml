@@ -34,21 +34,34 @@
         android:layout_height="499dp"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="6dp">
+        tools:layout_editor_absoluteY="6dp"
+        android:weightSum="1">
 
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/card_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.12"
-            app:srcCompat="@android:drawable/editbox_dropdown_light_frame" />
+            android:layout_height="211dp"
+            android:layout_marginTop="55dp"
+            app:srcCompat="@android:drawable/editbox_dropdown_light_frame"
+            android:layout_weight="0.54" />
 
         <Button
             android:id="@+id/get_card_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Get card" />
+
+        <TextView
+            android:id="@+id/set_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+
+        <ListView
+            android:id="@+id/rule_set"
+            android:layout_width="match_parent"
+            android:layout_height="79dp" />
 
     </LinearLayout>
 
